@@ -14,7 +14,7 @@ const limiter = rateLimit({
 })
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://blog-app-fe-drab.vercel.app/',
     methods:['GET','POST','PUT','DELETE'],
     credentials: true
 }))
