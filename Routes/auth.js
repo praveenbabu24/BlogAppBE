@@ -60,7 +60,7 @@ router.post('/login' , async (req,res) =>{
     }
 })
 
-const auth = require('../middleware/auth')
+const auth = require('../Middleware/auth')
 router.get('/verify', auth , (req,res) =>{
     res.status(200).json({message:"Token Valid"})
 })
