@@ -2,23 +2,11 @@ name: CD - Deploy Server
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to deploy'
-        required: true
-        default: 'main'
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
+    environment: production
 
     steps:
       - name: Check authorized user
@@ -28,10 +16,18 @@ jobs:
             exit 1
           fi
 
-      - name: Checkout selected branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
+      - name: Check latest build status on main
+        run: |
+          STATUS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${{ github.repository }}/actions/workflows/ci.yml/runs?branch=main&status=completed&per_page=1" \
+            | grep -m 1 '"conclusion"' | cut -d '"' -f4)
+          
+          echo "Latest build status: $STATUS"
+          
+          if [ "$STATUS" != "success" ]; then
+            echo "Latest build did not succeed. Aborting deploy."
+            exit 1
+          fi
 
       - name: Trigger Render Deploy
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
