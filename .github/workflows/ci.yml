@@ -1,11 +1,10 @@
-name: CI/CD - Server
+name: CI - Build Check
 
 on:
   pull_request:
     branches: [ main ]
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   build:
@@ -18,23 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Install dependencies
         run: npm install
-
-  deploy:
-    needs: build
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check authorized user
-        run: |
-          if [ "${{ github.actor }}" != "praveenbabu24" ]; then
-            echo "Unauthorized user: ${{ github.actor }}"
-            exit 1
-          fi
-
-      - name: Trigger Render Deploy
-        run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
