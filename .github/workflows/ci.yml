@@ -3,7 +3,8 @@ name: CI - Server Check
 on:
   pull_request:
     branches: [ main ]
-
+  push:
+    branches: [ main ]
 jobs:
   build:
     runs-on: ubuntu-latest
