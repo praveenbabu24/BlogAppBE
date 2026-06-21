@@ -65,9 +65,13 @@ router.get('/verify', auth , (req,res) =>{
     res.status(200).json({message:"Token Valid"})
 })
 
-router.post('/logout',(req,res) => {
-    res.clearCookie('token')
-    res.status(200).json({message:"logout success"})
+router.post('/logout', (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none'
+    })
+    res.status(200).json({ message: "logout success" })
 })
 
 module.exports = router
