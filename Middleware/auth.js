@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = (req,res,next) =>{
+    res.set('Cache-Control', 'no-store')
     const token = req.cookies.token
     if(!token){
         return res.status(401).json({message:'no token access denied'})
