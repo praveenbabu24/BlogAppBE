@@ -62,6 +62,7 @@ router.post('/login' , async (req,res) =>{
 
 const auth = require('../Middleware/auth')
 router.get('/verify', auth , (req,res) =>{
+    res.set('Cache-Control', 'no-store')
     res.status(200).json({message:"Token Valid"})
 })
 
