@@ -13,6 +13,7 @@ const limiter = rateLimit({
 	limit: 100,
 })
 
+app.set('etag',false)
 app.use(cors({
     origin: 'https://blog-app-fe-drab.vercel.app',
     methods:['GET','POST','PUT','DELETE'],
